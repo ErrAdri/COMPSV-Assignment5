@@ -5,16 +5,16 @@
 # Example:
 # Input: [1, 3, 2, 3, 4, 1, 3]
 # Output: 3
-
+ 
 def most_frequent(numbers):
     # An empty list has no most frequent value.
     if not numbers:
         return None
-
+ 
     counts = {}
     best_value = numbers[0]
     best_count = 0
-
+ 
     # Count each value and keep track of the leader as we go,
     # so the list only has to be walked once.
     for value in numbers:
@@ -22,9 +22,9 @@ def most_frequent(numbers):
         if counts[value] > best_count:
             best_count = counts[value]
             best_value = value
-
+ 
     return best_value
-
+ 
 """
 Time and Space Analysis for problem 1:
 - Best-case: O(n). Even if every element is the same, each one still has to be
@@ -42,28 +42,28 @@ Time and Space Analysis for problem 1:
   sorting the list in place first and counting runs of equal values, but that
   trade-off costs O(n log n) time and changes the order of the caller's list.
 """
-
-
+ 
+ 
 # 🔍 Problem 2: Remove Duplicates While Preserving Order
 # Write a function that returns a list with duplicates removed but preserves order.
 #
 # Example:
 # Input: [4, 5, 4, 6, 5, 7]
 # Output: [4, 5, 6, 7]
-
+ 
 def remove_duplicates(nums):
     seen = set()
     result = []
-
+ 
     for value in nums:
         # Set membership is O(1) on average, unlike `value in result`,
         # which would scan the whole result list each time.
         if value not in seen:
             seen.add(value)
             result.append(value)
-
+ 
     return result
-
+ 
 """
 Time and Space Analysis for problem 2:
 - Best-case: O(n). Every element has to be checked once, even when the list
@@ -82,8 +82,8 @@ Time and Space Analysis for problem 2:
   O(1) extra by skipping the set and scanning the result list instead, but
   the trade-off is O(n^2) time.
 """
-
-
+ 
+ 
 # 🔍 Problem 3: Return All Pairs That Sum to Target
 # Write a function that returns all unique pairs of numbers in the list that sum to a target.
 # Order of output does not matter. Assume input list has no duplicates.
@@ -91,20 +91,20 @@ Time and Space Analysis for problem 2:
 # Example:
 # Input: ([1, 2, 3, 4], target=5)
 # Output: [(1, 4), (2, 3)]
-
+ 
 # ORIGINAL SOLUTION (kept for comparison with the optimized version below)
 def find_pairs_original(nums, target):
     pairs = []
-
+ 
     # Compare every element with every element that comes after it.
     for i in range(len(nums)):
         for j in range(i + 1, len(nums)):
             if nums[i] + nums[j] == target:
                 pairs.append((min(nums[i], nums[j]), max(nums[i], nums[j])))
-
+ 
     return pairs
-
-
+ 
+ 
 # OPTIMIZED SOLUTION
 # How this was optimized compared to find_pairs_original:
 # The original used two nested loops to test every possible pair, which is
@@ -127,16 +127,16 @@ def find_pairs_original(nums, target):
 def find_pairs(nums, target):
     seen = set()
     pairs = []
-
+ 
     for num in nums:
         complement = target - num
         if complement in seen:
             # Store the smaller number first so the output is consistent.
             pairs.append((min(num, complement), max(num, complement)))
         seen.add(num)
-
+ 
     return pairs
-
+ 
 """
 Time and Space Analysis for problem 3:
 - Best-case: O(n). The whole list must be read even when no pair exists.
@@ -156,8 +156,8 @@ Time and Space Analysis for problem 3:
   caller's list or needs a sorted copy. The nested-loop original is the other
   option: O(1) extra space, but O(n^2) time.
 """
-
-
+ 
+ 
 # 🔍 Problem 4: Simulate List Resizing (Amortized Cost)
 # Create a function that adds n elements to a list that has a fixed initial capacity.
 # When the list reaches capacity, simulate doubling its size by creating a new list
@@ -165,13 +165,13 @@ Time and Space Analysis for problem 3:
 #
 # Example:
 # add_n_items(6) → should print when resizing happens.
-
+ 
 def add_n_items(n, initial_capacity=2):
     capacity = initial_capacity
     size = 0
     items = [None] * capacity   # fixed-size block of storage
     total_copies = 0
-
+ 
     for value in range(n):
         # The storage is full, so build a new one twice as large
         # and copy every existing value into it.
@@ -184,14 +184,14 @@ def add_n_items(n, initial_capacity=2):
             total_copies += size
             items = new_items
             capacity = new_capacity
-
+ 
         items[size] = value
         size += 1
-
+ 
     print(f"Added {n} items. Final capacity: {capacity}. Total copies: {total_copies}")
     # Return only the filled part of the storage.
     return items[:size]
-
+ 
 """
 Time and Space Analysis for problem 4:
 - When do resizes happen? Whenever an append arrives and the list is already
@@ -214,8 +214,8 @@ Time and Space Analysis for problem 4:
   would copy the whole list and n appends would cost 1 + 2 + ... + n =
   O(n^2). The trade-off is memory: up to half of the capacity can sit unused.
 """
-
-
+ 
+ 
 # 🔍 Problem 5: Compute Running Totals
 # Write a function that takes a list of numbers and returns a new list
 # where each element is the sum of all elements up to that index.
@@ -224,18 +224,18 @@ Time and Space Analysis for problem 4:
 # Input: [1, 2, 3, 4]
 # Output: [1, 3, 6, 10]
 # Because: [1, 1+2, 1+2+3, 1+2+3+4]
-
+ 
 def running_total(nums):
     totals = []
     current = 0
-
+ 
     # Carry the sum forward instead of re-adding from the start each time.
     for value in nums:
         current += value
         totals.append(current)
-
+ 
     return totals
-
+ 
 """
 Time and Space Analysis for problem 5:
 - Best-case: O(n). Every element contributes to the output, so each one has
@@ -256,12 +256,12 @@ Time and Space Analysis for problem 5:
   same job lazily and is useful when the totals are only needed one at a
   time.
 """
-
-
+ 
+ 
 # 🧪 Test Cases
 if __name__ == "__main__":
     import timeit
-
+ 
     # Problem 1: most_frequent
     assert most_frequent([1, 3, 2, 3, 4, 1, 3]) == 3        # example from the prompt
     assert most_frequent([]) is None                        # edge: empty list
@@ -272,7 +272,7 @@ if __name__ == "__main__":
     assert most_frequent([-1, -1, 0, 2]) == -1              # negative numbers
     assert most_frequent([4, 9, 9]) == 9                    # winner appears last
     print("Problem 1 tests passed")
-
+ 
     # Problem 2: remove_duplicates
     assert remove_duplicates([4, 5, 4, 6, 5, 7]) == [4, 5, 6, 7]   # example
     assert remove_duplicates([]) == []                              # edge: empty list
@@ -285,7 +285,7 @@ if __name__ == "__main__":
     remove_duplicates(original)
     assert original == [4, 5, 4]                                    # input is not modified
     print("Problem 2 tests passed")
-
+ 
     # Problem 3: find_pairs (both versions must agree)
     for pair_function in (find_pairs_original, find_pairs):
         assert sorted(pair_function([1, 2, 3, 4], 5)) == [(1, 4), (2, 3)]   # example
@@ -296,7 +296,7 @@ if __name__ == "__main__":
         assert sorted(pair_function([-3, 3, 0, 5, -5], 0)) == [(-5, 5), (-3, 3)]  # negatives
         assert pair_function([10, -4], 6) == [(-4, 10)]                     # exactly two elements
     print("Problem 3 tests passed")
-
+ 
     # Problem 4: add_n_items
     print("\nadd_n_items(6):")
     assert add_n_items(6) == [0, 1, 2, 3, 4, 5]             # example: resizes at 2 and 4
@@ -309,7 +309,7 @@ if __name__ == "__main__":
     print("\nadd_n_items(9, initial_capacity=1):")
     assert add_n_items(9, initial_capacity=1) == list(range(9))   # different starting capacity
     print("Problem 4 tests passed")
-
+ 
     # Problem 5: running_total
     assert running_total([1, 2, 3, 4]) == [1, 3, 6, 10]     # example
     assert running_total([]) == []                          # edge: empty list
@@ -321,7 +321,7 @@ if __name__ == "__main__":
     running_total(data)
     assert data == [1, 2, 3]                                # input is not modified
     print("Problem 5 tests passed")
-
+ 
     # Performance comparison for the optimized problem (Problem 3)
     print("\nfind_pairs: original vs optimized")
     for size in (1000, 2000, 4000):
@@ -330,5 +330,6 @@ if __name__ == "__main__":
         slow = timeit.timeit(lambda: find_pairs_original(sample, goal), number=3) / 3
         fast = timeit.timeit(lambda: find_pairs(sample, goal), number=3) / 3
         print(f"n = {size}: original {slow:.5f}s, optimized {fast:.5f}s")
-
+ 
     print("\nAll tests passed!")
+ 
